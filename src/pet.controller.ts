@@ -24,7 +24,8 @@ import { PdfService } from './pdf.service';
 @Controller('pets')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class PetController {
-  constructor(private readonly petService: PetService,
+  constructor(
+    private readonly petService: PetService,
     private readonly pdfService: PdfService,
   ) {}
 
@@ -63,13 +64,16 @@ export class PetController {
     @Res() res: Response, // Explicitly type the response as express.Response
   ) {
     const pet = await this.petService.findByIdWithRelations(id);
-  
+
     if (!pet) {
       throw new NotFoundException('Pet not found');
     }
-  
+
     this.pdfService.generatePetPDF(res, pet);
   }
-  
 
+  @Get(':id/medical-summary')
+  async getMedicalSummary(@Param('id', ParseIntPipe) id: number) {
+    return this.petService.getMedicalSummaryOptimized(id);
+  }
 }

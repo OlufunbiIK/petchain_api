@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Vaccination } from './vaccination.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from 'typeorm';
+import { Appointment } from './appointment.entity';
+import { TreatmentHistory } from './treatment-history.entity';
 
 @Entity()
+@Unique(['licenseNumber']) 
 export class Vet {
   @PrimaryGeneratedColumn()
   id: number;
@@ -9,18 +11,18 @@ export class Vet {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true }) 
   licenseNumber: string;
 
-  @Column({ nullable: true })
-  clinic: string;
+  @Column()
+  contact: string;
 
   @Column()
-  email: string;
+  specialization: string;
 
-  @Column({ nullable: true })
-  phone: string;
+  @OneToMany(() => Appointment, (appointment) => appointment.vet)
+  appointments: Appointment[];
 
-  @OneToMany(() => Vaccination, (vaccination) => vaccination.vet)
-  vaccinations: Vaccination[];
-} 
+  @OneToMany(() => TreatmentHistory, (treatment) => treatment.vet)
+  treatments: TreatmentHistory[];
+}

@@ -47,4 +47,10 @@ export class Vaccination {
 
   @Column({ nullable: true })
   vetId: number;
-} 
+
+  @Column()
+  expirationDate: Date;
+
+  @Column({ nullable: true })
+  notes: string;
+}
